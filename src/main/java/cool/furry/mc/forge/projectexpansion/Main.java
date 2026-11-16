@@ -1,6 +1,7 @@
 package cool.furry.mc.forge.projectexpansion;
 
 import cool.furry.mc.forge.projectexpansion.config.Config;
+import cool.furry.mc.forge.projectexpansion.config.ClientConfig;
 import cool.furry.mc.forge.projectexpansion.net.PacketHandler;
 import cool.furry.mc.forge.projectexpansion.registries.*;
 import cool.furry.mc.forge.projectexpansion.util.*;
@@ -40,6 +41,7 @@ public class Main {
         CreativeTabs.Registry.register(bus);
         MinecraftForge.EVENT_BUS.addListener(this::serverTick);
         ModLoadingContext.get().registerConfig(ModConfig.Type.COMMON, Config.Spec, "project-expansion.toml");
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, ClientConfig.Spec, "project-expansion-client.toml");
 
         Fuel.registerAll();
         Matter.registerAll();

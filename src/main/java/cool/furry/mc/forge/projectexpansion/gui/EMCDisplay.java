@@ -2,6 +2,7 @@ package cool.furry.mc.forge.projectexpansion.gui;
 
 import cool.furry.mc.forge.projectexpansion.Main;
 import cool.furry.mc.forge.projectexpansion.config.Config;
+import cool.furry.mc.forge.projectexpansion.config.ClientConfig;
 import cool.furry.mc.forge.projectexpansion.util.EMCFormat;
 import moze_intel.projecte.api.capabilities.PECapabilities;
 import net.minecraft.ChatFormatting;
@@ -10,7 +11,7 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
-import net.minecraftforge.client.event.CustomizeGuiOverlayEvent;
+import net.minecraftforge.client.event.RenderGuiEvent;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.level.LevelEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -66,12 +67,16 @@ public class EMCDisplay {
     }
 
     @SubscribeEvent
-    public static void onRenderGUI(CustomizeGuiOverlayEvent.DebugText  event) {
-        if (!Config.emcDisplay.get()) return;
+    public static void onRenderGUI(RenderGuiEvent.Post event) {
+        Minecraft minecraft = Minecraft.getInstance();
+        if (!Config.emcDisplay.get() || minecraft.player == null || minecraft.options.hideGui
+                || minecraft.options.renderDebug) return;
         BigInteger avg = history[0].add(history[1]);
         String str = EMCFormat.format(emc);
         if (!avg.equals(BigInteger.ZERO)) str += " " + (avg.compareTo(BigInteger.ZERO) > 0 ? (ChatFormatting.GREEN + "+") : (ChatFormatting.RED + "-")) + EMCFormat.format(avg.abs()) + "/s";
-        event.getLeft().add(String.format("EMC: %s", str));
+        int x = 2 + ClientConfig.emcDisplayX.get();
+        int y = 2 + ClientConfig.emcDisplayY.get();
+        event.getGuiGraphics().drawString(minecraft.font, String.format("EMC: %s", str), x, y, 0xFFFFFF, true);
     }
 }
 
