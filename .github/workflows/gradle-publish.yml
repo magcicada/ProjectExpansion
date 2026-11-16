@@ -17,14 +17,14 @@ jobs:
         uses: actions/setup-java@v5
         with:
           java-version: '17'
-          distribution: 'zulu'
+          distribution: 'temurin'
           cache: 'gradle'
 
       - name: Grant execute permission
         run: chmod +x gradlew
 
       - name: Build with Gradle
-        run: ./gradlew build
+        run: bash ./gradlew --no-daemon build --stacktrace
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v6
